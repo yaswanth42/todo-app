@@ -1,38 +1,213 @@
+/*
+  Modern theme for the Todo app
+  - Color variables
+  - Global reset & typography
+  - Attractive gradient background with subtle animation
+  - Card, buttons, inputs, list items
+  - Motion-safe animations & accessible focus states
+*/
+
+/* ------- Theme Tokens ------- */
+:root {
+  --bg-1: #0f172a; /* slate-900 */
+  --bg-2: #1e293b; /* slate-800 */
+  --card: #0b1220cc; /* translucent dark card */
+  --card-border: #1f2a44; 
+  --text: #e5e7eb; /* gray-200 */
+  --muted: #94a3b8; /* slate-400 */
+  --accent: #7c3aed; /* violet-600 */
+  --accent-2: #06b6d4; /* cyan-500 */
+  --success: #22c55e; /* green-500 */
+  --danger: #ef4444; /* red-500 */
+  --warning: #f59e0b; /* amber-500 */
+  --shadow-lg: 0 20px 40px -20px rgba(0,0,0,0.45);
+  --shadow-md: 0 10px 24px -14px rgba(0,0,0,0.45);
+  --radius: 16px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-1: #f8fafc; /* slate-50 */
+    --bg-2: #e2e8f0; /* slate-200 */
+    --card: #ffffffcc;
+    --card-border: #e2e8f0;
+    --text: #0f172a; /* slate-900 */
+    --muted: #475569; /* slate-600 */
+    --accent: #6d28d9; 
+    --accent-2: #0891b2;
+    --shadow-lg: 0 24px 48px -24px rgba(2, 6, 23, 0.25);
+    --shadow-md: 0 12px 28px -18px rgba(2, 6, 23, 0.25);
+  }
+}
+
+/* ------- Base & Layout ------- */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(124, 58, 237, 0.25), transparent 55%),
+              radial-gradient(1000px 600px at 90% 20%, rgba(6, 182, 212, 0.25), transparent 55%),
+              linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  background-size: 200% 200%;
+  animation: bg-pan 18s ease-in-out infinite alternate;
+}
+
+@keyframes bg-pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: left;
+}
+
+/* Optional card for the app content (applies to first child) */
+.App > div {
+  width: 100%;
+  max-width: 720px;
+  background: var(--card);
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .App > div { padding: 2rem; }
+}
+
+/* ------- Typography ------- */
+h1, h2, h3 { margin: 0 0 0.75rem; line-height: 1.15; }
+h1 { font-size: clamp(1.5rem, 1.2rem + 2vw, 2.25rem); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.25rem, 1rem + 1vw, 1.5rem); font-weight: 700; }
+p { color: var(--muted); margin: 0.25rem 0 1rem; }
+
+/* ------- Inputs & Buttons ------- */
+.input, input[type="text"], input[type="search"], textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  border: 1px solid transparent;
+  outline: none;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .05s ease;
+}
+.input::placeholder,
+input::placeholder,
+textarea::placeholder { color: color-mix(in srgb, var(--muted) 88%, transparent); }
+.input:focus,
+input:focus,
+textarea:focus {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
+  background: rgba(255,255,255,0.08);
+}
+
+.btn {
+  appearance: none;
+  border: 0;
   color: white;
+  font-weight: 700;
+  padding: 0.8rem 1.1rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+}
+.btn:hover { filter: brightness(1.08) saturate(1.1); }
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent); }
+.btn[disabled], .btn:disabled { cursor: not-allowed; filter: grayscale(0.2) opacity(0.7); }
+.btn.active { outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--muted) 35%, transparent);
+}
+.btn-danger { background: linear-gradient(135deg, var(--danger), #b91c1c); }
+.btn-success { background: linear-gradient(135deg, var(--success), #15803d); }
+.btn-warning { background: linear-gradient(135deg, var(--warning), #b45309); }
+
+/* ------- Layout helpers ------- */
+.row { display: flex; gap: .75rem; align-items: center; }
+.col { display: flex; flex-direction: column; gap: .75rem; }
+.spacer { height: 1rem; }
+
+/* ------- Todo-specific (ready to use) ------- */
+.todo-header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.todo-subtitle { color: var(--muted); font-size: .95rem; }
+
+.todo-form { display: grid; grid-template-columns: 1fr auto; gap: .75rem; }
+.todo-form .btn { white-space: nowrap; }
+
+.todo-list { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .5rem; }
+.todo-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .75rem;
+  align-items: center;
+  padding: .75rem .9rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid color-mix(in srgb, var(--card-border) 65%, transparent);
+  transition: background .2s ease, border-color .2s ease, transform .06s ease;
+  animation: fade-in .25s ease both;
+}
+.todo-item:hover { background: rgba(255,255,255,0.06); }
+.todo-item:active { transform: translateY(1px); }
+
+@keyframes fade-in { from { opacity: 0; translate: 0 4px; } to { opacity: 1; translate: 0 0; } }
+
+.todo-check { width: 18px; height: 18px; accent-color: var(--accent); }
+.todo-text { color: var(--text); }
+.todo-text.completed { text-decoration: line-through; color: color-mix(in srgb, var(--muted) 65%, transparent); }
+
+.todo-actions { display: flex; gap: .5rem; }
+.todo-actions .icon-btn {
+  width: 36px; height: 36px; display: grid; place-items: center;
+  border-radius: 10px; background: transparent;
+  border: 1px solid color-mix(in srgb, var(--muted) 35%, transparent);
+  color: var(--text); cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .06s ease;
+}
+.todo-actions .icon-btn:hover { background: rgba(255,255,255,0.06); }
+.todo-actions .icon-btn:active { transform: translateY(1px); }
+
+.pill {
+  font-size: 12px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+  border-radius: 999px; padding: .25rem .6rem; color: white; background: var(--accent);
 }
 
-.App-link {
-  color: #61dafb;
-}
+/* ------- Links & Misc ------- */
+.App-link { color: var(--accent-2); text-decoration: none; }
+.App-link:hover { text-decoration: underline; }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Keep CRA logo animation for compatibility (unused here) */
+.App-logo { height: 40vmin; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo { animation: App-logo-spin infinite 20s linear; }
 }
+@keyframes App-logo-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ------- Nice scrollbars (Chromium/Edge) ------- */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--muted) 45%, transparent); border-radius: 999px; }
+*::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--muted) 60%, transparent); }
+
